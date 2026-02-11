@@ -123,10 +123,17 @@ jobs:
         run: |
           uv sync --locked
 
-      - name: Execute math_server.py
+      - name: Execute Server and Client
         run: |
-          uv run python math_server.py
-
-      - name: Execute main.py
-        run: |
+          # Start math_server.py in the background
+          uv run python servers/math_server.py &
+          SERVER_PID=$!
+          
+          # Give it a moment to initialize
+          sleep 5
+          
+          # Run the client
           uv run python main.py
+          
+          # Kill the server
+          kill $SERVER_PID
