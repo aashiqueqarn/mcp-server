@@ -1,4 +1,5 @@
 import asyncio
+import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_mcp_adapters.tools import load_mcp_tools
@@ -11,9 +12,11 @@ load_dotenv()
 
 llm = ChatOpenAI(temperature=0)
 
+
+
 stdio_server_params = StdioServerParameters(
     command="python",
-    args=["/Users/aashiquekarn/Desktop/Personal/MCP_Servers/mcp-server/servers/math_server.py"],
+    args=[os.path.abspath(os.path.join(os.path.dirname(__file__), "servers/math_server.py"))],
 )
 
 async def main():
@@ -23,7 +26,7 @@ async def main():
             print('Session initialized')
             tools = await load_mcp_tools(session)
             agent = create_react_agent(llm, tools)
-            result = await agent.ainvoke({"messages": [HumanMessage(content="What is 2 + 2 * 5?")]})
+            result = await agent.ainvoke({"messages": [HumanMessage(content="What is (2 + 2) * 5?")]})
             print(result["messages"][-1].content)
 
 
