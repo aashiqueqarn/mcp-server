@@ -136,5 +136,7 @@ jobs:
           uv run python main.py
           
           # Kill the server
-          kill $SERVER_PID
+          if kill -0 $SERVER_PID 2>/dev/null; then
+            kill $SERVER_PID
+          fi
           
